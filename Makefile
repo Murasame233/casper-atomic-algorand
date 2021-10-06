@@ -16,18 +16,22 @@ test: build-erc20 build-atomic-swap
 	cd tests && cargo test
 
 clippy:
+	cd atomic_swap && cargo clippy --all-targets -- -D warnings
 	cd erc20_token && cargo clippy --all-targets -- -D warnings
 	cd tests && cargo clippy --all-targets -- -D warnings
 
 check-lint: clippy
+	cd atomic_swap && cargo fmt -- --check
 	cd erc20_token && cargo fmt -- --check
 	cd tests && cargo fmt -- --check
 
 lint: clippy
+	cd atomic_swap && cargo fmt
 	cd erc20_token && cargo fmt
 	cd tests && cargo fmt
 
 clean:
+	cd atomic_swap && cargo clean
 	cd erc20_token && cargo clean
 	cd tests && cargo clean
 	rm -rf tests/wasm
