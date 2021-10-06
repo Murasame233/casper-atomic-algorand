@@ -125,7 +125,7 @@ mod tests {
     }
 
     #[test]
-    pub(crate) fn test_deploy() {
+    fn test_deploy() {
         // Deploy
         let mut t = Token::deploy();
         println!("{}",t.token_name());
