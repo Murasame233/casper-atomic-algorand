@@ -10,6 +10,7 @@ casper-engine-test-support = { version = "1.3.3", features = ["test-support"] }
 casper-erc20 = { version = "0.2.0", features = ["std"] }
 casper-types = { version = "1.3.3", features = ["std"] }
 hex = "0.4.3"
+sha3 = "0.9.1"
 
 [[bin]]
 name = "integration-tests"
