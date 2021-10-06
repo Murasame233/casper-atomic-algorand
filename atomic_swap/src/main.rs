@@ -71,7 +71,7 @@ fn withdraw() {
         );
         storage::write(amount_uref, U256::from(0))
     } else {
-        revert(Error::ErrorSecret)
+        revert(Error::InValidSecret)
     }
 }
 

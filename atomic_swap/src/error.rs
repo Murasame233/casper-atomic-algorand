@@ -3,7 +3,7 @@ use casper_types::ApiError;
 #[repr(u16)]
 pub enum Error {
     InValidCaller = 0,
-    ErrorSecret = 1,
+    InValidSecret = 1,
     NotEnoughBalance = 2,
 }
 
