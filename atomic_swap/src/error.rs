@@ -5,6 +5,8 @@ pub enum Error {
     InValidCaller = 0,
     InValidSecret = 1,
     NotEnoughBalance = 2,
+    TimeOut = 3,
+    TimeUnOut = 4,
 }
 
 impl From<Error> for ApiError {
