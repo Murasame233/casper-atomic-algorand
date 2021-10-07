@@ -28,63 +28,71 @@ use casper_types::{
 use validator::{caller_is_owner, caller_is_recipient};
 
 // user use this for update hash
-// #[no_mangle]
-// fn update_hash() {
-//     if !caller_is_owner() {
-//         revert(Error::InValidCaller)
-//     }
-//     let hash: String = runtime::get_named_arg("hash");
-//     let k = runtime::get_key("hash").unwrap();
-//     storage::write(k.into_uref().unwrap(), hash);
-// }
+#[no_mangle]
+fn update_hash() {
+    if !caller_is_owner() {
+        revert(Error::InValidCaller)
+    }
+    let hash: String = runtime::get_named_arg("hash");
+    let k = runtime::get_key("hash").unwrap();
+    storage::write(k.into_uref().unwrap(), hash);
+}
 
 #[no_mangle]
 fn withdraw() {
     if !caller_is_recipient() {
         revert(Error::InValidCaller)
     };
+    if is_time_out() {
+        revert(Error::TimeOut)
+    }
     let secret: String = runtime::get_named_arg("secret");
     let hash = _hash(secret.clone());
     let _hash: String = storage::read(runtime::get_key("hash").unwrap().into_uref().unwrap())
         .unwrap()
         .unwrap();
     if hash == _hash {
+        // write secret
         storage::write(
             runtime::get_key("secret").unwrap().into_uref().unwrap(),
             secret,
         );
+
+        //transfer to recipient
         let amount_uref = runtime::get_key("amount").unwrap().into_uref().unwrap();
         let amount: U256 = storage::read(amount_uref).unwrap().unwrap();
         let recipient: AccountHash =
             storage::read(runtime::get_key("recipient").unwrap().into_uref().unwrap())
                 .unwrap()
                 .unwrap();
-        call_contract::<()>(
-            token,
-            "transfer",
-            runtime_args! {
-                "recipient" => Key::from(recipient),
-                "amount" => amount
-            },
-        );
+        transfer_to(Key::from(recipient), amount);
+
+        // Set amount to 0;
         storage::write(amount_uref, U256::from(0))
     } else {
         revert(Error::InValidSecret)
     }
 }
 
+// When timeout user can refund their money
 #[no_mangle]
 fn refund() {
     if !caller_is_owner() {
         revert(Error::InValidCaller)
     };
-}
+    if !is_time_out() {
+        revert(Error::TimeUnOut)
+    }
+    let amount_uref = runtime::get_key("amount").unwrap().into_uref().unwrap();
+    let amount: U256 = storage::read(amount_uref).unwrap().unwrap();
+    let recipient: AccountHash =
+        storage::read(runtime::get_key("owner").unwrap().into_uref().unwrap())
+            .unwrap()
+            .unwrap();
+    transfer_to(Key::from(recipient), amount);
 
-#[no_mangle]
-fn fund() {
-    if !caller_is_owner() {
-        revert(Error::InValidCaller)
-    };
+    // Set amount to 0;
+    storage::write(amount_uref, U256::from(0))
 }
 
 #[no_mangle]
@@ -103,13 +111,20 @@ fn call() {
 
     fn get_entries() -> EntryPoints {
         let mut entry_points = EntryPoints::new();
-        // entry_points.add_entry_point(EntryPoint::new(
-        //     "update_hash".to_string(),
-        //     vec![Parameter::new("hash", CLType::String)],
-        //     CLType::Unit,
-        //     EntryPointAccess::Public,
-        //     EntryPointType::Contract,
-        // ));
+        entry_points.add_entry_point(EntryPoint::new(
+            "update_hash".to_string(),
+            vec![Parameter::new("hash", CLType::String)],
+            CLType::Unit,
+            EntryPointAccess::Public,
+            EntryPointType::Contract,
+        ));
+        entry_points.add_entry_point(EntryPoint::new(
+            "refund".to_string(),
+            vec![],
+            CLType::Unit,
+            EntryPointAccess::Public,
+            EntryPointType::Contract,
+        ));
         entry_points.add_entry_point(EntryPoint::new(
             "withdraw".to_string(),
             vec![Parameter::new("secret", CLType::String)],
@@ -154,13 +169,13 @@ fn call() {
     // Global state
     // Have these keys
     // - secret
-    // - hash *
+    // - hash * 4 
     // - owner
-    // - recipient *
+    // - recipient * 5
     // - start
-    // - end *
-    // - amount *
-    // - token *
+    // - end * 3
+    // - amount * 1
+    // - token * 2
 
     let mut named_keys = NamedKeys::new();
 
