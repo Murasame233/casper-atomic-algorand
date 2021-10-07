@@ -218,12 +218,11 @@ mod tests {
             "Token is deployed, uesr_a have: {}",
             t.balance_of(Key::from(t.user_a)).unwrap()
         );
-
         // deploy atomic swap
         let args = runtime_args! {
             "token"=> ContractHash::from(t.token_hash),
             "amount" => U256::from(10),
-            "end" => 50u64,
+            "end" => 3000u64,
             "recipient" => t.user_b,
             "hash" => _hash("wow".into())
         };
