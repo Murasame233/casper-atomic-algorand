@@ -7,8 +7,10 @@ compile_error!("target arch should be wasm32: compile with '--target wasm32-unkn
 extern crate alloc;
 
 mod error;
+mod helper;
 mod validator;
 use error::Error;
+use helper::{_hash, is_time_out, transfer_to};
 
 use alloc::{
     string::{String, ToString},
@@ -53,10 +55,6 @@ fn withdraw() {
         );
         let amount_uref = runtime::get_key("amount").unwrap().into_uref().unwrap();
         let amount: U256 = storage::read(amount_uref).unwrap().unwrap();
-        let token: ContractHash =
-            storage::read(runtime::get_key("token").unwrap().into_uref().unwrap())
-                .unwrap()
-                .unwrap();
         let recipient: AccountHash =
             storage::read(runtime::get_key("recipient").unwrap().into_uref().unwrap())
                 .unwrap()
@@ -188,15 +186,4 @@ fn call() {
     put_key::<U256>("amount", runtime::get_named_arg("amount"), &mut named_keys);
     put_key::<ContractHash>("token", runtime::get_named_arg("token"), &mut named_keys);
     finish_setup(named_keys);
-}
-
-// Helper functions
-
-// Use sha3 for hashing
-fn _hash(data: String) -> String {
-    use sha3::Digest;
-    use sha3::Keccak256;
-    let mut hasher = Keccak256::new();
-    hasher.update(data);
-    hex::encode(hasher.finalize())
 }
