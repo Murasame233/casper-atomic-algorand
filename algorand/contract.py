@@ -63,6 +63,7 @@ App.globalPut(Bytes("Start"),Global.latest_timestamp()),
         Assert(Not(is_time_out)),
         # This call only can be recipient
         Assert(is_recipient),
+        # '3H==' is a placeholder
         Assert(Keccak256(Txn.application_args[1])== Bytes("base64","3H==")),
 
         # Valid Payment
@@ -107,6 +108,7 @@ App.globalPut(Bytes("Start"),Global.latest_timestamp()),
 
 
 def escrow(app_id):
+    # app_id is a placeholder
     is_two_tx = Global.group_size() == Int(2)
     is_appcall = Gtxn[0].type_enum() == TxnType.ApplicationCall
     is_appid = Gtxn[0].application_id() == Int(app_id)
@@ -133,6 +135,7 @@ with open('atomic.teal', 'w') as f:
     f.write(compiled)
 
 with open('escrow.teal', 'w') as f:
+    # 123456 is a placeholder
     compiled = compileTeal(escrow(123456), Mode.Application, version=4)
     f.write(compiled)
 

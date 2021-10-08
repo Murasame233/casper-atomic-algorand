@@ -38,6 +38,7 @@ clean:
 
 
 prepare-test: build-erc20 build-atomic-swap
+	rm -rf test-net/contract
 	cd algorand && bash compile.sh && mv contract ../test-net/
 	mkdir -p test-net/wasm
 	cp erc20_token/target/wasm32-unknown-unknown/release/erc20_token.wasm test-net/wasm

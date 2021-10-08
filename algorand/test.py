@@ -2,11 +2,9 @@ import base64
 import os
 from time import sleep
 from algosdk import account, v2client, mnemonic, encoding
-import algosdk
 from algosdk.future.transaction import ApplicationCreateTxn, ApplicationNoOpTxn, LogicSigAccount, OnComplete, StateSchema, SuggestedParams, LogicSig, PaymentTxn, assign_group_id
 from algosdk.transaction import LogicSigTransaction
 from dotenv import load_dotenv
-import json
 from Crypto.Hash import keccak
 
 load_dotenv()
@@ -27,7 +25,8 @@ base = os.path.dirname(os.path.abspath(__file__))
 
 keccak256 = keccak.new(data=b'wow', digest_bits=256).digest()
 
-atomic = open(base+"/contract/atomic.teal", "r").read().replace("3H==",str(base64.b64encode(keccak256).decode("utf-8")))
+atomic = open(base+"/contract/atomic.teal", "r").read().replace("3H==",
+                                                                str(base64.b64encode(keccak256).decode("utf-8")))
 clear = open(base+"/contract/clear.teal", "r").read()
 
 algod_token = os.environ.get("PURESTACK")
@@ -49,7 +48,6 @@ compiled_atomic = base64.b64decode(client.compile(atomic)["result"])
 compiled_clear = base64.b64decode(client.compile(clear)["result"])
 
 pub = mnemonic.to_public_key(mnemonic_b)
-
 
 
 create = ApplicationCreateTxn(
@@ -118,7 +116,7 @@ withdraw = ApplicationNoOpTxn(public_address_b, client.suggested_params(), app_i
                               "withdraw".encode("UTF-8"), "wow".encode("UTF-8")])
 
 withdraw_pay = PaymentTxn(
-    escrow_address, client.suggested_params(), public_address_b, 50*100000,public_address_a)
+    escrow_address, client.suggested_params(), public_address_b, 50*100000, public_address_a)
 [withdraw, withdraw_pay] = assign_group_id([withdraw, withdraw_pay])
 signed_withdraw = withdraw.sign(private_key_b)
 signed_withdraw_pay = LogicSigTransaction(withdraw_pay, compiled_escrow)
