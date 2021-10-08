@@ -35,3 +35,10 @@ clean:
 	cd erc20_token && cargo clean
 	cd tests && cargo clean
 	rm -rf tests/wasm
+
+
+prepare-test: build-erc20 build-atomic-swap
+	cd algorand && bash compile.sh && mv contract ../test-net/
+	mkdir -p test-net/wasm
+	cp erc20_token/target/wasm32-unknown-unknown/release/erc20_token.wasm test-net/wasm
+	cp atomic_swap/target/wasm32-unknown-unknown/release/atomic_swap.wasm test-net/wasm

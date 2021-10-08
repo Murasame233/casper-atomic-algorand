@@ -2,6 +2,6 @@
 **/.vscode
 **/env
 .KEY
-algorand/contract
+**/contract
 **/wasm
 **/.env
