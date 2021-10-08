@@ -4,3 +4,4 @@
 .KEY
 algorand/contract
 **/wasm
+**/.env
