@@ -5,3 +5,4 @@
 **/contract
 **/wasm
 **/.env
+**/__pycache__
