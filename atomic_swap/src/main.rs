@@ -184,7 +184,8 @@ fn call() {
     put_key::<String>("hash", runtime::get_named_arg("hash"), &mut named_keys);
 
     // Swaping Users
-    put_key("owner", runtime::get_caller(), &mut named_keys);
+    let owner = runtime::get_caller();
+    put_key::<AccountHash>("owner", owner, &mut named_keys);
     put_key::<AccountHash>(
         "recipient",
         runtime::get_named_arg("recipient"),

@@ -248,6 +248,42 @@ mod tests {
         assert_eq!(amount, "10".to_string());
     }
 
+    // #[test]
+    // fn test_atomic_swap_fail() {
+    //     // deploy
+    //     let mut t = Token::deploy();
+    //     t.transfer(Key::from(t.user_a), U256::from(50u8), t.user_t);
+    //     println!(
+    //         "Token is deployed, uesr_a have: {}",
+    //         t.balance_of(Key::from(t.user_a)).unwrap()
+    //     );
+    //     // deploy atomic swap
+    //     let args = runtime_args! {
+    //         "token"=> ContractHash::from(t.token_hash),
+    //         "amount" => U256::from(10),
+    //         "end" => 3000u64,
+    //         "recipient" => t.user_b,
+    //         "hash" => _hash("wow".into())
+    //     };
+    //     let atomic_swap_hash =
+    //         t.deploy_contract("atomic_swap.wasm", args, t.user_a, "atomic_contract");
+    //     println!(
+    //         "Atomic Swap Deployed: {}",
+    //         atomic_swap_hash.to_formatted_string()
+    //     );
+
+    //     // after deploy user_a's token has been transfer to contract
+    //     assert_eq!(t.balance_of(Key::from(t.user_a)).unwrap(), U256::from(40));
+
+    //     // a refund
+    //     t.call(
+    //         atomic_swap_hash.value(),
+    //         t.user_a,
+    //         "refund",
+    //         runtime_args! {},
+    //     );
+    // }
+
     //helper function
     fn _hash(data: String) -> String {
         use sha3::Digest;

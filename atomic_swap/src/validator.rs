@@ -12,6 +12,6 @@ pub fn caller_is_recipient() -> bool {
 
 pub fn caller_is_owner() -> bool {
     let caller = runtime::get_caller();
-    let owner = runtime::get_key("owner").unwrap().into_account().unwrap();
+    let owner = storage::read::<AccountHash>(runtime::get_key("owner").unwrap().into_uref().unwrap()).unwrap().unwrap();
     caller == owner
 }

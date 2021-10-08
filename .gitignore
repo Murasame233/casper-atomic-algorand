@@ -1,6 +1,6 @@
 **/target
 **/.vscode
-**/venv
+**/env
 .KEY
 algorand/contract
 **/wasm
