@@ -77,12 +77,15 @@ fn withdraw() {
 // When timeout user can refund their money
 #[no_mangle]
 fn refund() {
+    // Valid
     if !caller_is_owner() {
         revert(Error::InValidCaller)
     };
     if !is_time_out() {
         revert(Error::TimeUnOut)
     }
+
+    // Get amount to send
     let amount_uref = runtime::get_key("amount").unwrap().into_uref().unwrap();
     let amount: U256 = storage::read(amount_uref).unwrap().unwrap();
     let recipient: AccountHash =
@@ -150,6 +153,10 @@ fn call() {
         if balance < amount {
             revert(Error::NotEnoughBalance)
         } else {
+            // There is must to say, It looks like a `defects` in the erc-20 casper implement
+            // use callstack to validate is a good idea, but when call a not `stored contract`(just like when creating),
+            // the callstack will not contain the unstored contract, so the contract can tracsfer token from user
+            // I think it need to be repair
             call_contract::<()>(
                 token,
                 "transfer",
@@ -169,13 +176,13 @@ fn call() {
     // Global state
     // Have these keys
     // - secret
-    // - hash * 4 
+    // - hash
     // - owner
-    // - recipient * 5
+    // - recipient
     // - start
-    // - end * 3
-    // - amount * 1
-    // - token * 2
+    // - end
+    // - amount
+    // - token
 
     let mut named_keys = NamedKeys::new();
 
