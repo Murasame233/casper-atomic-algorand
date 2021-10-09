@@ -43,3 +43,10 @@ prepare-test: build-erc20 build-atomic-swap
 	mkdir -p test-net/wasm
 	cp erc20_token/target/wasm32-unknown-unknown/release/erc20_token.wasm test-net/wasm
 	cp atomic_swap/target/wasm32-unknown-unknown/release/atomic_swap.wasm test-net/wasm
+
+build: build-erc20 build-atomic-swap
+	rm -rf build
+	mkdir build
+	cd algorand && bash compile.sh && mv contract/* ../build/
+	cp erc20_token/target/wasm32-unknown-unknown/release/erc20_token.wasm build
+	cp atomic_swap/target/wasm32-unknown-unknown/release/atomic_swap.wasm build
