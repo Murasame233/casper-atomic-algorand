@@ -46,7 +46,7 @@ A secret for user_a validate.
 2. Get the `Token Contract Hash`
 3. Send some Token to user_a
 
-## User A deploy atomic swap
+## User A deploy atomic swap on casper
 
 > Var:
 >
@@ -63,22 +63,22 @@ A secret for user_a validate.
 3. User_b ask the user_a for `atomic contract hash`.
 4. User_b query atomic swap contract global state to get the user_a's secret `hash`
 
-## User B deploy atomic swap
+## User B deploy atomic swap on algorand
 
 > Var:
 >
 > - `app_id`
 
-1. Replace `3H==` placeholder on the `atomic.teal` file to the hash
+1. Replace `3H==` placeholder on the `atomic.teal` file to the secret hash
 2. Compile it
-3. Deploy it with these args (Must be **same order** as below) and get `app_id`
+3. Deploy it with these args (Must be **same order** as below) and get the return `app_id`
    > `End`: time with sec \
    > `hash`: user_a secret `hash` \
    > `Recipient`: use algorand encoding.decode_address \
    > `{End} {Hash} {Recipient}`
 4. Replace `123456` placeholder on the `escrow.teal` file to the `app_id`
-5. compile get address.
-6. update application's escrow address with args `update escrow address`
+5. compile get escrow address.
+6. update application's escrow address with args `update {escrow address}`
 7. fund this address with algo
 8. tell user_a `app_id`
 
@@ -90,4 +90,4 @@ A secret for user_a validate.
 
 ### user_b withdraw
 
-1. user_b query algorand app state for get the real secret and call the `atomic contract hash` entrypoint `withdraw` with args `{secret}` to get the money
+2. user_b query algorand app state for get the real secret and call the `atomic contract hash` on casper with entrypoint `withdraw` with args `{secret}` to get the token
