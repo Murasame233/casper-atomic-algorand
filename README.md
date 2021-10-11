@@ -42,3 +42,13 @@ make build
 ```
 
 And the file will be on `build` folder
+
+# P.S.
+
+why no video?
+
+Because I am living a country which have network firewalls (GFW).
+
+This country has strict internet connection restrictions for some foreign servers.
+
+I cannot connect test-net for test.
