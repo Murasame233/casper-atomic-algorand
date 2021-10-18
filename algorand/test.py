@@ -29,7 +29,7 @@ atomic = open(base+"/contract/atomic.teal", "r").read().replace("3H==",
                                                                 str(base64.b64encode(keccak256).decode("utf-8")))
 clear = open(base+"/contract/clear.teal", "r").read()
 
-algod_token = os.environ.get("PURESTACK")
+algod_token = os.environ.get("PURESTAKE")
 headers = {
     "X-API-Key": algod_token,
 }
