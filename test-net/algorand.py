@@ -45,7 +45,7 @@ class Algorand:
             self.Account_A_Addre, self.Account_B_Addre))
 
     def algo_client(self):
-        algod_token = os.environ.get("PURESTACK")
+        algod_token = os.environ.get("PURESTAKE")
         headers = {"X-API-Key": algod_token}
         self.client = v2client.algod.AlgodClient(
             algod_token, os.environ.get("ALGONET"), headers)
